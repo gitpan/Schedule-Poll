@@ -12,13 +12,10 @@ use Carp;
 
 Schedule::Poll - Evenly schedule recurring events with various intervals
 
-=head1 VERSION
-
-Version 0.01
 
 =cut
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 
 =head1 SYNOPSIS
@@ -57,14 +54,16 @@ our $VERSION = '0.01';
 
 =head2 new
 
-Constructor. Excepts a hashref with the values being an interval in seconds. The interval should be a divisor of 86400.
+Constructor. Accepts a hashref with the values being an interval in seconds. Each interval used should be a divisor of 86400.
 
 
-    my $href = {
+    my $poll = Schedule::Poll->new({
+    
         foo => 300 # 5 minutes
         bar => 600 # 10 minutes
         baz => 5   # 5 seconds
-    };
+    
+    });
 
 =cut
 
@@ -213,6 +212,10 @@ sub current {
 =head2 which
 
 Returns an arrary reference containing the items for that current tick interval.
+
+    $poll->which;
+
+
 =cut
 
 sub which {
@@ -227,6 +230,35 @@ sub which {
     }
     return 0;
 }
+
+=head2 Examples
+
+    $href = {
+        a => 3,
+        b => 3,
+        c => 3
+    };
+
+    Timeline:
+        interval | 1  2  3  4  5  6  
+        ---------+------------------
+        key      | a  b  c  a  b  c
+
+
+    $href = {
+        a => 3,
+        b => 3,
+        c => 3,
+        d => 6,
+        e => 6,
+        f => 6
+    };
+
+    Timeline:
+        interval | 1  2  3  4  5  6  7  8  9  10  11  12 
+        ---------+--------------------------------------
+        key      | b  a  c  b  a  c  b  a  c  b   a   c
+                 | d     e     f     d     e      f
 
 
 =head1 AUTHOR
